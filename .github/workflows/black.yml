@@ -1,0 +1,9 @@
+workflow "Black Linter" {
+  on = "push"
+  resolves = ["Lint"]
+}
+
+action "Lint" {
+  uses = "lgeiger/black-action@master"
+  args = ". -l 79 --check"
+}
