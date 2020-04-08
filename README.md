@@ -2,3 +2,38 @@
 
 # sim-exchange <a href="https://cla-assistant.io/musicfox/sim-exchange"><img src="https://cla-assistant.io/readme/badge/musicfox/sim-exchange" alt="CLA assistant" /></a>
 A micro-asset investment, allocation, and trade simulator.
+
+## Quick start
+
+## `sim-exchange` structure and architecture
+
+This project consists of three portions, a `backend`, a `frontend`, and
+a `research` portion with a statistical API, deployed from the 
+`research/models` directory. 
+
+Each portion has its own build and development process and should be 
+individually considered as separate, modular applications which together
+produce the client application as a whole.
+
+### `backend/` - deployed @ Google Cloud Platform (GCP)
+
+### `frontend/` - deployed @ Zeit.co
+
+### `research/` - `research/models/` APIs deployed @ GCP
+
+
+## Contributing & Development
+
+Contributions are quite welcome and it's very easy to get started; read on.
+
+### We :heart: and :open_hands: community contributions!
+
+Please see our [`CONTRIBUTING.md`](musicfox/sim-exchange/CONTRIBUTING.md)
+to get started.
+
+Do note, we do require a contributor license agreement such
+that contributors' contributions are protected property, outside of the
+"open-source" Apache license covering this repository. 
+
+### Installation and setup
+
