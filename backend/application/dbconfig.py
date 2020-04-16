@@ -21,9 +21,12 @@ def set_uri(
         raise AttributeError("You need to set your MFDB_USER env variable.")
 
     if not pswd:
-        raise AttributeError("You need to set your MFDB_PASSWORD env variable.")
+        raise AttributeError(
+            "You need to set your MFDB_PASSWORD env variable."
+        )
 
     return f"postgres+psycopg2://{user}:{pswd}@{ip}:{port}/{dbname}?{extras}"
+
 
 # set environment variables set in google cloud bucket using berglas
 # or for testing via `source .env`
