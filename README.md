@@ -26,9 +26,9 @@ produce the client application as a whole.
 
 Contributions are quite welcome and it's very easy to get started; read on.
 
-### We :heart: and :open_hands: community contributions!
+### We :heart: community contributions!
 
-Please see our [`CONTRIBUTING.md`](musicfox/sim-exchange/CONTRIBUTING.md)
+Please see our [`CONTRIBUTING.md`](CONTRIBUTING.md)
 to get started.
 
 Do note, we do require a contributor license agreement such
