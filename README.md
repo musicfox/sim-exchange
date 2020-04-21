@@ -22,18 +22,22 @@ produce the client application as a whole.
 ### `research/` - `research/models/` APIs deployed @ GCP
 
 
-## Contributing & Development
+## Contributing
 
-Contributions are quite welcome and it's very easy to get started; read on.
+Contributions are quite welcome and it's very easy to get started.
+
+**Questions ?**: [chat.musicfox.io/sim-exchange](https://chat.musicfox.io/sim-exchange) - coming soon
+**Part of the team ?**: [Join our Slack channel](https://musicfox.slack.com)`
 
 ### We :heart: community contributions!
-
-Please see our [`CONTRIBUTING.md`](CONTRIBUTING.md)
-to get started.
 
 Do note, we do require a contributor license agreement such
 that contributors' contributions are protected property, outside of the
 "open-source" Apache license covering this repository. 
 
-### Installation and setup
+Please see our [`CONTRIBUTING.md`](CONTRIBUTING.md)
+to get started.
 
+### Development installation and setup
+
+#### `sim-exchange` contributors
