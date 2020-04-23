@@ -42,3 +42,5 @@ to get started.
 
 #### `sim-exchange` contributors
 Zhihao
+Joe @szzyzzz
+Rita @RKoulikova
