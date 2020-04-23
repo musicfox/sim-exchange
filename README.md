@@ -43,3 +43,4 @@ to get started.
 #### `sim-exchange` contributors
 Joe @szzyzzz
 Rita @RKoulikova
+Rong
