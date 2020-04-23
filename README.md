@@ -41,4 +41,5 @@ to get started.
 ### Development installation and setup
 
 #### `sim-exchange` contributors
-Rita
+Joe @szzyzzz
+Rita @RKoulikova
