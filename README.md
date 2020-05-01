@@ -17,7 +17,7 @@ produce the client application as a whole.
 
 ### `backend/` - deployed @ Google Cloud Platform (GCP)
 
-### `frontend/` - deployed @ Zeit.co
+### `frontend/` - deployed @ Vercel.com
 
 ### `research/` - `research/models/` APIs deployed @ GCP
 
@@ -41,4 +41,8 @@ to get started.
 ### Development installation and setup
 
 #### `sim-exchange` contributors
-Rita
+Joe @szzyzzz
+Rita @RKoulikova
+Rong
+Seb
+Yiwei
