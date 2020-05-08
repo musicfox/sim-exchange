@@ -1,0 +1,29 @@
+# The github labeling workflow bot
+documentation:
+    - ./README.md
+    - frontend/README.md
+    - backend/README.md
+    - docs/*
+    - research/README.md
+    - research/models/README.md
+
+research:
+    - research/*
+
+test:
+    - frontend/test/*
+    - backend/test/*
+    - research/models/test/*
+
+modeling:
+    - research/models/*
+
+packaging:
+    - frontend/package.json
+    - backend/Pipenv*
+    - backend/application/requirements.txt
+
+build:
+    - backend/application/Dockerfile
+    - backend/*-cloudbuild.yaml 
+    - frontend/package.json
