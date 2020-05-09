@@ -44,6 +44,10 @@ SQLAlchemy = "*"
 Werkzeug = "*"
 WTForms = "*"
 flask-migrate = "*"
+dataclasses-json = "*"
 
 [requires]
 python_version = "3.7"
+
+[pipenv]
+allow_prereleases = true
