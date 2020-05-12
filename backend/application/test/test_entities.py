@@ -9,6 +9,7 @@ from entities import (
 )
 import datetime
 import dataclasses
+import pandas as pd
 
 
 def test_AssetUser(asset_user):
@@ -57,3 +58,9 @@ def test_user_generation(assetUsers, investorUsers):
     assert isinstance(investorUsers, list)
     assert len(assetUsers)
     assert len(investorUsers)
+
+def test_arrival_path(arrivalPath, startValArrivalPath):
+    assert isinstance(arrivalPath, pd.DataFrame)
+    assert len(arrivalPath)
+    assert arrivalPath['arrivals'][0] == startValArrivalPath
+    assert arrivalPath[['arrivals']].plot() is not None

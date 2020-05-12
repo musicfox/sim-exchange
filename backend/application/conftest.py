@@ -133,12 +133,19 @@ def assetUsers(genres):  # TODO IMplement assetUsers
     """
     return [generateAssetUser(genres) for i in range(1000)]
 
+@pytest.fixture(scope="module")
+def startValArrivalPath():
+    return 20
 
 @pytest.fixture(scope="module")
-def arrivalPath():  # TODO Implement arrivalPath
+def arrivalPath(startValArrivalPath):  # TODO Implement arrivalPath
     """
     # `arrivalPath`
     A pytest fixture to return a simulated user arrival path based on
     past wikipedia data for major actors/actresses.
     """
-    pass  # generate an arrival path based on the wikipedia data of actors
+    from datasets import userArrivals
+    # first set an arbitrary starter
+    userArrivals.loc[userArrivals.index[0], 'chg'] = startValArrivalPath
+    userArrivals['arrivals'] = userArrivals[['chg']].cumsum().round()  # generate an arrival path based on the wikipedia data of actors
+    return userArrivals[['arrivals']]
