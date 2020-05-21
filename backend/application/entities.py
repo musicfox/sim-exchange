@@ -9,11 +9,12 @@ import datetime
 @dataclass
 class InvestorUser(DataClassJsonMixin):
     """
-    # `InvestorUser`
+    `InvestorUser`
 
     A dataclass to house and organize an investor's feature information.
 
-    ## Usage
+    **Usage**
+
     ```python
     >>> # serialization usage
     >>> Investor.to_json() 
@@ -23,23 +24,24 @@ class InvestorUser(DataClassJsonMixin):
     ```
     """
 
-    mu: float
-    sigma: float
-    principal: float
-    remaining_principal: float
-    genre: str
-    time_horizon: datetime.datetime
-    investments: dict
+    mu: float #given by the incoming user
+    sigma: float # given by the incoming user
+    principal: float # given by the incoming user
+    remaining_principal: float # given by currently allocated less principal
+    genre: str # given by the incoming user
+    time_horizon: datetime.datetime # given by the incoming user
+    investments: dict # store cash flow matches as they're found
 
 
 @dataclass
 class AssetUser(DataClassJsonMixin):
     """
-    # `AssetUser`
+    `AssetUser`
 
     A dataclass to house and organize an artist's feature information.
 
-    ## Usage
+    **Usage**
+
     ```python
     >>> # instantiation
     >>> Artist(mu=.05, sigma=.10, ranking=.33, genre='country', expiration_date=(datetime.today() - pd.offsets.DateOffset(months=6)), pricing_date=datetime.today())
@@ -51,10 +53,11 @@ class AssetUser(DataClassJsonMixin):
     ```
     """
 
-    mu: float
-    sigma: float
-    ranking: float
-    genre: str
-    expiration_date: datetime.datetime
-    pricing_date: datetime.datetime
-    investors: dict
+    mu: float # given by the incoming user
+    sigma: float # given by the incoming user
+    ranking: float # calculated by the MatchingAlgo
+    genre: str # given by our clustering algorithms
+    expiration_date: datetime.datetime # given by the user
+    pricing_date: datetime.datetime # given by the frontend 
+    investors: dict # store cash flow matches as they're found
+
