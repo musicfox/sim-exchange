@@ -1,7 +1,7 @@
 """
 test_Dealer.py
 """
-import pytest 
+import pytest
 
 
 def test_init(contributors):
