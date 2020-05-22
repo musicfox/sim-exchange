@@ -1,7 +1,7 @@
 """
 test_OPL.py
 """
-import pytest 
+import pytest
 
 
 def test_init(contributors):

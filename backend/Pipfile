@@ -44,6 +44,12 @@ SQLAlchemy = "*"
 Werkzeug = "*"
 WTForms = "*"
 flask-migrate = "*"
+dataclasses-json = "*"
+pandas = "*"
+matplotlib = "*"
 
 [requires]
 python_version = "3.7"
+
+[pipenv]
+allow_prereleases = true
