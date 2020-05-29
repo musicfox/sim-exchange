@@ -32,11 +32,14 @@ def generateInvestorUser(genres,):
     # `generateInvestorUser`
     Generate a random investor user.
     """
+    rnum = random.random()
+    starting_principal = rnum * 10000
+    current_principal = starting_principal if rnum < .5 else starting_principal * random.random()
     return InvestorUser(
-        mu=0.01,
-        sigma=0.20,
-        principal=10000.0,
-        remaining_principal=10000.0,
+        mu=random.random(),
+        sigma=random.random(),
+        principal=starting_principal,
+        remaining_principal=current_principal,
         genre=random.choice(genres),
         time_horizon=generateExpiration(),
         investments=dict(),
@@ -49,9 +52,9 @@ def generateAssetUser(genres,):
     Generate a random asset user.
     """
     return AssetUser(
-        mu=0.01,
-        sigma=0.20,
-        ranking=0.65,
+        mu=random.random(),
+        sigma=random.random(),
+        ranking=random.random(),
         genre=random.choice(genres),
         expiration_date=generateExpiration(),
         pricing_date=datetime.datetime.now(),
@@ -96,7 +99,7 @@ def expiration_date():
 
 
 @pytest.fixture(scope="module")
-def investor_user(genres,):  # TODO Add random uniform generator
+def investor_user(genres,):  
     """
     # `investor_user`
     Pytest fixture to generate a random investor user.
@@ -106,7 +109,7 @@ def investor_user(genres,):  # TODO Add random uniform generator
 
 
 @pytest.fixture(scope="module")
-def asset_user(genres,):  # TODO Add random uniform generator
+def asset_user(genres,):  
     """
     # `artist_user`
     A pytest fixture to generate a random investor user.
@@ -115,7 +118,7 @@ def asset_user(genres,):  # TODO Add random uniform generator
 
 
 @pytest.fixture(scope="module")
-def investorUsers(genres):  # TODO Implement investorUsers
+def investorUsers(genres):  
     """
     # `investorUsers`
     A pytest fixture to return a generator of randomly generated
@@ -125,7 +128,7 @@ def investorUsers(genres):  # TODO Implement investorUsers
 
 
 @pytest.fixture(scope="module")
-def assetUsers(genres):  # TODO IMplement assetUsers
+def assetUsers(genres):  
     """
     # `assetUsers`
     A pytest fixture to return a generator of randomly generated
@@ -133,19 +136,24 @@ def assetUsers(genres):  # TODO IMplement assetUsers
     """
     return [generateAssetUser(genres) for i in range(1000)]
 
+
 @pytest.fixture(scope="module")
 def startValArrivalPath():
     return 20
 
+
 @pytest.fixture(scope="module")
-def arrivalPath(startValArrivalPath):  # TODO Implement arrivalPath
+def arrivalPath(startValArrivalPath):  
     """
     # `arrivalPath`
     A pytest fixture to return a simulated user arrival path based on
     past wikipedia data for major actors/actresses.
     """
     from datasets import userArrivals
+
     # first set an arbitrary starter
-    userArrivals.loc[userArrivals.index[0], 'chg'] = startValArrivalPath
-    userArrivals['arrivals'] = userArrivals[['chg']].cumsum().round()  # generate an arrival path based on the wikipedia data of actors
-    return userArrivals[['arrivals']]
+    userArrivals.loc[userArrivals.index[0], "chg"] = startValArrivalPath
+    userArrivals["arrivals"] = (
+        userArrivals[["chg"]].cumsum().round()
+    )  # generate an arrival path based on the wikipedia data of actors
+    return userArrivals[["arrivals"]]
