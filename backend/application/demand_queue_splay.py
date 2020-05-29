@@ -13,18 +13,15 @@ class Order:
         self.cash = cash
         self.time_stamp = time_stamp
 
+    def __repr__(self):
+        result = "Order( "
+        for key, val in self.__dict__.items():
+            result += f" {key}: {val}, "
+        result.rstrip("'").rstrip(",")
+        return result
+
     def __str__(self):
-        return (
-            "Order(mu="
-            + str(self.mu)
-            + ", sigma="
-            + str(self.sigma)
-            + ", cash="
-            + str(self.cash)
-            + ", time="
-            + str(self.time_stamp)
-            + ")"
-        )
+        return self.__repr__()
 
 
 class Node:
@@ -40,7 +37,7 @@ class OrderBook:  # SplayTree
     def __init__(self):
         self.root = None
 
-    def __delete_node_helper(self, node, key):
+    def _delete_node_helper(self, node, key):
         x = None
         t = None
         s = None
@@ -58,7 +55,7 @@ class OrderBook:  # SplayTree
             return
 
         # split operation
-        self.__splay(x)
+        self._splay(x)
         if x.right != None:
             t = x.right
             t.parent = None
@@ -73,7 +70,7 @@ class OrderBook:  # SplayTree
         if s.left != None:
             s.left.parent = None
 
-        self.root = self.__join(s.left, t)
+        self.root = self._join(s.left, t)
         s = None
 
     """
@@ -82,7 +79,7 @@ class OrderBook:  # SplayTree
     """
 
     # joins two trees s and t
-    def __join(self, s, t):
+    def _join(self, s, t):
         if s == None:
             return t
 
@@ -90,7 +87,7 @@ class OrderBook:  # SplayTree
             return s
 
         x = self.maximum(s)
-        self.__splay(x)
+        self._splay(x)
         x.right = t
         t.parent = x
         return x
@@ -110,7 +107,7 @@ class OrderBook:  # SplayTree
 
     """
 
-    def __left_rotate(self, x):
+    def _left_rotate(self, x):
         y = x.right
         x.right = y.left
         if y.left != None:
@@ -134,7 +131,7 @@ class OrderBook:  # SplayTree
 
     """
 
-    def __right_rotate(self, x):
+    def _right_rotate(self, x):
         y = x.left
         x.left = y.right
         if y.right != None:
@@ -156,46 +153,46 @@ class OrderBook:  # SplayTree
     """
 
     # Splaying operation. Move x to the root of the tree
-    def __splay(self, x):
+    def _splay(self, x):
         while x.parent != None:
             if x.parent.parent == None:
                 if x == x.parent.left:
                     # zig rotation
-                    self.__right_rotate(x.parent)
+                    self._right_rotate(x.parent)
                 else:
                     # zag rotation
-                    self.__left_rotate(x.parent)
+                    self._left_rotate(x.parent)
             elif x == x.parent.left and x.parent == x.parent.parent.left:
                 # zig-zig rotation
-                self.__right_rotate(x.parent.parent)
-                self.__right_rotate(x.parent)
+                self._right_rotate(x.parent.parent)
+                self._right_rotate(x.parent)
             elif x == x.parent.right and x.parent == x.parent.parent.right:
                 # zag-zag rotation
-                self.__left_rotate(x.parent.parent)
-                self.__left_rotate(x.parent)
+                self._left_rotate(x.parent.parent)
+                self._left_rotate(x.parent)
             elif x == x.parent.right and x.parent == x.parent.parent.left:
                 # zig-zag rotation
-                self.__left_rotate(x.parent)
-                self.__right_rotate(x.parent)
+                self._left_rotate(x.parent)
+                self._right_rotate(x.parent)
             else:
                 # zag-zig rotation
-                self.__right_rotate(x.parent)
-                self.__left_rotate(x.parent)
+                self._right_rotate(x.parent)
+                self._left_rotate(x.parent)
 
-    def __search_tree_helper(self, node, key):
+    def _search_tree_helper(self, node, key):
         if node == None or key == node.data:
             return node
 
         if key < node.data:
-            return self.__search_tree_helper(node.left, key)
-        return self.__search_tree_helper(node.right, key)
+            return self._search_tree_helper(node.left, key)
+        return self._search_tree_helper(node.right, key)
 
     # search the tree for the key k
     # and return the corresponding node
     def search_tree(self, Node):
-        x = self.__search_tree_helper(self.root, Node.data)
+        x = self._search_tree_helper(self.root, Node.data)
         if x != None:
-            self.__splay(x)
+            self._splay(x)
 
     # insert the key to the tree in its appropriate position
     def insert(self, Node):
@@ -219,8 +216,8 @@ class OrderBook:  # SplayTree
         else:
             y.right = node
         # splay the node
-        self.__splay(node)
+        self._splay(node)
 
     # delete the node from the tree
     def delete_node(self, Node):
-        self.__delete_node_helper(self.root, Node.data)
+        self._delete_node_helper(self.root, Node.data)
