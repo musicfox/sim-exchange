@@ -24,13 +24,13 @@ class InvestorUser(DataClassJsonMixin):
     ```
     """
 
-    mu: float #given by the incoming user
-    sigma: float # given by the incoming user
-    principal: float # given by the incoming user
-    remaining_principal: float # given by currently allocated less principal
-    genre: str # given by the incoming user
-    time_horizon: datetime.datetime # given by the incoming user
-    investments: dict # store cash flow matches as they're found
+    mu: float  # given by the incoming user
+    sigma: float  # given by the incoming user
+    principal: float  # given by the incoming user
+    remaining_principal: float  # given by currently allocated less principal
+    genre: str  # given by the incoming user
+    time_horizon: datetime.datetime  # given by the incoming user
+    investments: dict  # store cash flow matches as they're found
 
 
 @dataclass
@@ -53,11 +53,10 @@ class AssetUser(DataClassJsonMixin):
     ```
     """
 
-    mu: float # given by the incoming user
-    sigma: float # given by the incoming user
-    ranking: float # calculated by the MatchingAlgo
-    genre: str # given by our clustering algorithms
-    expiration_date: datetime.datetime # given by the user
-    pricing_date: datetime.datetime # given by the frontend 
-    investors: dict # store cash flow matches as they're found
-
+    mu: float  # given by the incoming user
+    sigma: float  # given by the incoming user
+    ranking: float  # calculated by the MatchingAlgo
+    genre: str  # given by our clustering algorithms
+    expiration_date: datetime.datetime  # given by the user
+    pricing_date: datetime.datetime  # given by the frontend
+    investors: dict  # store cash flow matches as they're found

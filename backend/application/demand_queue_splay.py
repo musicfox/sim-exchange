@@ -5,6 +5,7 @@ import datetime
 import pandas as pd
 import sys
 
+
 class Order:
     def __init__(self, mu, sigma, cash, time_stamp):
         self.mu = mu
@@ -13,11 +14,21 @@ class Order:
         self.time_stamp = time_stamp
 
     def __str__(self):
-        return 'Order(mu=' + str(self.mu) + ', sigma=' + str(self.sigma) + ', cash=' + str(self.cash) + ', time=' + str(
-            self.time_stamp) + ')'
+        return (
+            "Order(mu="
+            + str(self.mu)
+            + ", sigma="
+            + str(self.sigma)
+            + ", cash="
+            + str(self.cash)
+            + ", time="
+            + str(self.time_stamp)
+            + ")"
+        )
+
 
 class Node:
-    def  __init__(self, order):
+    def __init__(self, order):
         self.data = order.cash
         self.order = order.__str__()
         self.parent = None
@@ -129,7 +140,7 @@ class OrderBook:  # SplayTree
         if y.right != None:
             y.right.parent = x
 
-        y.parent = x.parent;
+        y.parent = x.parent
         if x.parent == None:
             self.root = y
         elif x == x.parent.right:
