@@ -5,25 +5,28 @@ import datetime
 import pytest
 import time
 
-from demand_queue_splay import Order, Node, OrderBook 
+from demand_queue_splay import Order, Node, OrderBook
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def testOrderData():
     return dict(
         mu=random.random(),
         sigma=random.random(),
         cash=random.random() * 100,
-        time_stamp=datetime.datetime.today()
+        time_stamp=datetime.datetime.today(),
     )
 
-@pytest.fixture(scope='module')
+
+@pytest.fixture(scope="module")
 def testOrder(testOrderData):
     return Order(**testOrderData)
 
-@pytest.fixture(scope='module')
+
+@pytest.fixture(scope="module")
 def testNode(testOrder):
     return Node(testOrder)
+
 
 def test_Order(testOrder, testOrderData):
     # test creation
@@ -33,12 +36,13 @@ def test_Order(testOrder, testOrderData):
     o1 = Order(**testOrderData)
     # checking parameters
     assert o1.mu == testOrder.mu
-    assert o1.sigma == testOrder.sigma 
-    assert o1.cash== testOrder.cash
+    assert o1.sigma == testOrder.sigma
+    assert o1.cash == testOrder.cash
     assert o1.time_stamp == testOrder.time_stamp
 
     # test print
-    assert 'sigma' in str(testOrder)
+    assert "sigma" in str(testOrder)
+
 
 def test_Node(testNode, testOrder):
     # test creation
@@ -47,25 +51,27 @@ def test_Node(testNode, testOrder):
     # check params
     n1 = Node(testOrder)
 
-    for p1, p2 in zip(testNode.__dict__.items() , n1.__dict__.items()):
-        # check parameter names 
+    for p1, p2 in zip(testNode.__dict__.items(), n1.__dict__.items()):
+        # check parameter names
         assert p1[0] == p2[0]
         # check values
         assert p1[1] == p2[1]
 
+
 def test_OrderBook_insert():
-    o1 = Order(mu=.05, sigma=.10, cash=100, time_stamp=datetime.date.today())
+    o1 = Order(mu=0.05, sigma=0.10, cash=100, time_stamp=datetime.date.today())
     n1 = Node(o1)
     tree = OrderBook()
     tree.insert(n1)
 
     assert tree.root.data == 100
 
+
 def test_OrderBook_search():
-    o1 = Order(mu=.05, sigma=.10, cash=100, time_stamp=datetime.date.today())
-    o2 = Order(mu=.15, sigma=.20, cash=200, time_stamp=datetime.date.today())
-    o3 = Order(mu=.25, sigma=.30, cash=150, time_stamp=datetime.date.today())
-    o4 = Order(mu=.25, sigma=.30, cash=50, time_stamp=datetime.date.today())
+    o1 = Order(mu=0.05, sigma=0.10, cash=100, time_stamp=datetime.date.today())
+    o2 = Order(mu=0.15, sigma=0.20, cash=200, time_stamp=datetime.date.today())
+    o3 = Order(mu=0.25, sigma=0.30, cash=150, time_stamp=datetime.date.today())
+    o4 = Order(mu=0.25, sigma=0.30, cash=50, time_stamp=datetime.date.today())
 
     n1 = Node(o1)
     n2 = Node(o2)
@@ -83,14 +89,16 @@ def test_OrderBook_search():
 
     assert tree.root.data == 150
 
+
 def test_OrderBook_delete():
-    o1 = Order(mu=.05, sigma=.10, cash=100, time_stamp=datetime.date.today())
+    o1 = Order(mu=0.05, sigma=0.10, cash=100, time_stamp=datetime.date.today())
     n1 = Node(o1)
     tree = OrderBook()
     tree.insert(n1)
     tree.delete_node(n1)
 
     assert tree.root == None
+
 
 def test_OrderBook_many_iters(testNode, investorUsers):
     """
@@ -101,12 +109,14 @@ def test_OrderBook_many_iters(testNode, investorUsers):
     tree = OrderBook()
     opl_nodes = []
     for user in investorUsers:
-        n = Node(Order(
-            mu=user.mu, 
-            sigma=user.sigma,
-            cash=user.principal,
-            time_stamp=datetime.datetime.today(),
-        ))
+        n = Node(
+            Order(
+                mu=user.mu,
+                sigma=user.sigma,
+                cash=user.principal,
+                time_stamp=datetime.datetime.today(),
+            )
+        )
         opl_nodes.append(n)
         tree.insert(n)
 
@@ -126,4 +136,4 @@ def test_OrderBook_many_iters(testNode, investorUsers):
     t2_len = time.time() - start2
 
     # the first should be much faster if splaying correctly
-    assert t1_len < t2_len 
+    assert t1_len < t2_len

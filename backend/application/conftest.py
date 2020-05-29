@@ -34,7 +34,11 @@ def generateInvestorUser(genres,):
     """
     rnum = random.random()
     starting_principal = rnum * 10000
-    current_principal = starting_principal if rnum < .5 else starting_principal * random.random()
+    current_principal = (
+        starting_principal
+        if rnum < 0.5
+        else starting_principal * random.random()
+    )
     return InvestorUser(
         mu=random.random(),
         sigma=random.random(),
@@ -99,7 +103,7 @@ def expiration_date():
 
 
 @pytest.fixture(scope="module")
-def investor_user(genres,):  
+def investor_user(genres,):
     """
     # `investor_user`
     Pytest fixture to generate a random investor user.
@@ -109,7 +113,7 @@ def investor_user(genres,):
 
 
 @pytest.fixture(scope="module")
-def asset_user(genres,):  
+def asset_user(genres,):
     """
     # `artist_user`
     A pytest fixture to generate a random investor user.
@@ -118,7 +122,7 @@ def asset_user(genres,):
 
 
 @pytest.fixture(scope="module")
-def investorUsers(genres):  
+def investorUsers(genres):
     """
     # `investorUsers`
     A pytest fixture to return a generator of randomly generated
@@ -128,7 +132,7 @@ def investorUsers(genres):
 
 
 @pytest.fixture(scope="module")
-def assetUsers(genres):  
+def assetUsers(genres):
     """
     # `assetUsers`
     A pytest fixture to return a generator of randomly generated
@@ -143,7 +147,7 @@ def startValArrivalPath():
 
 
 @pytest.fixture(scope="module")
-def arrivalPath(startValArrivalPath):  
+def arrivalPath(startValArrivalPath):
     """
     # `arrivalPath`
     A pytest fixture to return a simulated user arrival path based on
