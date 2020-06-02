@@ -1,0 +1,118 @@
+# cloudbuild.yaml
+# 
+# The Google Cloud Build yaml specification file for `sim-exchange`.
+# 
+
+steps:
+# pull the berglas container and write the secrets to temporary files 
+# under /workspace
+  - name: gcr.io/berglas/berglas
+    id: 'Install Berglas'
+    env:
+    - '${_VAR2}=berglas://${_BUCKET_ID_SECRETS}/${_VAR2}?destination=/workspace/${_VAR2}'
+    - '${_VAR3}=berglas://${_BUCKET_ID_SECRETS}/${_VAR3}?destination=/workspace/${_VAR3}'
+    - '${_VAR4}=berglas://${_BUCKET_ID_SECRETS}/${_VAR4}?destination=/workspace/${_VAR4}'
+    - '${_VAR5}=berglas://${_BUCKET_ID_SECRETS}/${_VAR5}?destination=/workspace/${_VAR5}'
+    - '${_VAR6}=berglas://${_BUCKET_ID_SECRETS}/${_VAR6}?destination=/workspace/${_VAR6}'
+
+    args: ["exec", "--", "/bin/sh"]
+
+# install the cloud sql proxy
+  - id: 'Install Cloud SQL Proxy'
+    name: alpine:latest
+    entrypoint: sh
+    args:
+      - "-c"
+      - "\
+      wget -O /workspace/cloud_sql_proxy \
+      https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 && \
+      sleep 2 && \
+      chmod +x /workspace/cloud_sql_proxy"
+    waitFor: ['-']
+
+# using the secrets from above, build and run the test suite
+  - name: 'python:3.7-slim'
+    id: 'Run Unit Tests'
+    entrypoint: '/bin/bash'
+    args: 
+      - "-c"
+      - "\
+      (/workspace/cloud_sql_proxy -dir=/workspace/${_SQL_PROXY_PATH} -instances=${_INSTANCE_NAME1} & sleep 2) && \
+      apt-get update && apt-get install -y --no-install-recommends \
+      build-essential libssl-dev libffi-dev libpq-dev python3-dev wget && \
+      rm -rf /var/lib/apt/lists/* && \
+      export ${_VAR2}=$(cat /workspace/${_VAR2}) && \ 
+      export ${_VAR3}=$(cat /workspace/${_VAR3}) && \ 
+      export ${_VAR4}=$(cat /workspace/${_VAR4}) && \
+      export ${_VAR5}=$(cat /workspace/${_VAR5}) && \
+      export ${_VAR6}=$(cat /workspace/${_VAR6}) && \
+      export MFDB_NAME=${_MFDB_NAME} && \
+      export MFDB_USER=${_MFDB_USER} && \
+      export INSTANCE_NAME1=${_INSTANCE_NAME1} && \
+      export SQL_PROXY_PATH=/workspace/${_SQL_PROXY_PATH} && \
+      pip install -r requirements.txt && \
+      python -m pytest -v && \
+      rm -rf /workspace/${_SQL_PROXY_PATH} && \
+      echo 'Removed Cloud SQL Proxy'"
+    
+    waitFor: ['Install Cloud SQL Proxy', 'Install Berglas']
+    dir: '${_APP_DIR}'
+
+# Using the application/Dockerfile build instructions, build the app image
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Build Application Image'
+    args: ['build',
+           '-t',
+           'gcr.io/$PROJECT_ID/${_IMAGE_NAME}',
+           '.',
+          ]
+    dir: '${_APP_DIR}'
+
+# Push the application image
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Push Application Image'
+    args: ['push',
+           'gcr.io/$PROJECT_ID/${_IMAGE_NAME}',
+          ]
+
+# Deploy the application image to Cloud Run
+# populating secrets via Berglas exec ENTRYPOINT for gunicorn
+  - name: 'gcr.io/cloud-builders/gcloud'
+    id: 'Deploy Application Image'
+    args: ['beta', 
+           'run',
+           'deploy', 
+           '${_IMAGE_NAME}',
+           '--image',
+           'gcr.io/$PROJECT_ID/${_IMAGE_NAME}',
+           '--region',
+           'us-central1',
+           '--platform', 
+           'managed',
+           '--quiet',
+           '--add-cloudsql-instances',
+           '${_INSTANCE_NAME1}',
+           '--set-env-vars',
+           'SQL_PROXY_PATH=/${_SQL_PROXY_PATH},MFDB_NAME=${_MFDB_NAME},MFDB_USER=${_MFDB_USER},INSTANCE_NAME1=${_INSTANCE_NAME1},${_VAR2}=berglas://${_BUCKET_ID_SECRETS}/${_VAR2},${_VAR3}=berglas://${_BUCKET_ID_SECRETS}/${_VAR3},${_VAR4}=berglas://${_BUCKET_ID_SECRETS}/${_VAR4},${_VAR5}=berglas://${_BUCKET_ID_SECRETS}/${_VAR5},${_VAR6}=berglas://${_BUCKET_ID_SECRETS}/${_VAR6}',
+           '--allow-unauthenticated',
+          ]
+
+# Use the defaults below which can be changed at the command line
+substitutions:
+  _IMAGE_NAME: sim-exchange-backend:$SHORT_SHA
+  _BUCKET_ID_SECRETS: sim-exchange-backend-secrets
+  _INSTANCE_NAME1: musicfox:us-central1:musicfox-db-3
+  _SQL_PROXY_PATH: cloudsql
+  _MFDB_NAME: postgres
+  _MFDB_USER: postgres
+  _VAR2: APP_SECRET
+  _VAR3: MFDB_PASSWORD 
+  _VAR4: REDIS_HOST
+  _VAR5: REDIS_PASSWORD
+  _VAR6: REDIS_PORT
+  _APP_DIR: backend/application/ # path from repo 
+
+# The images we'll push here
+images: [
+  'gcr.io/$PROJECT_ID/${_IMAGE_NAME}'
+]
