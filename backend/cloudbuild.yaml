@@ -110,7 +110,7 @@ substitutions:
   _VAR4: REDIS_HOST
   _VAR5: REDIS_PASSWORD
   _VAR6: REDIS_PORT
-  _APP_DIR: application/ # path from cloudbuild.yaml directory
+  _APP_DIR: backend/application/ # path from cloudbuild.yaml directory
     
 # The images we'll push here
 images: [
