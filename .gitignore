@@ -234,3 +234,5 @@ dist/
 # Temporary folders
 tmp/
 temp/
+.dev
+.dev/
