@@ -28,7 +28,7 @@ steps:
       https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 && \
       sleep 2 && \
       chmod +x /workspace/cloud_sql_proxy"
-    waitFor: ['-']
+    waitFor: ['Install Berglas']
 
 # using the secrets from above, build and run the test suite
   - name: 'python:3.7-slim'
@@ -63,7 +63,7 @@ steps:
     id: 'Build Application Image'
     args: ['build',
            '-t',
-           'gcr.io/$PROJECT_ID/${_IMAGE_NAME}',
+           'gcr.io/$PROJECT_ID/${_IMAGE_NAME}-$TAG_NAME-$SHORT_SHA',
            '.',
           ]
     dir: '${_APP_DIR}'
@@ -72,7 +72,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     id: 'Push Application Image'
     args: ['push',
-           'gcr.io/$PROJECT_ID/${_IMAGE_NAME}',
+           'gcr.io/$PROJECT_ID/${_IMAGE_NAME}-$TAG_NAME-$SHORT_SHA',
           ]
 
 # Deploy the application image to Cloud Run
@@ -82,9 +82,9 @@ steps:
     args: ['beta', 
            'run',
            'deploy', 
-           '${_IMAGE_NAME}',
+           '${_IMAGE_NAME}-$TAG_NAME',
            '--image',
-           'gcr.io/$PROJECT_ID/${_IMAGE_NAME}',
+           'gcr.io/$PROJECT_ID/${_IMAGE_NAME}-$TAG_NAME-$SHORT_SHA',
            '--region',
            'us-central1',
            '--platform', 
@@ -99,7 +99,7 @@ steps:
 
 # Use the defaults below which can be changed at the command line
 substitutions:
-  _IMAGE_NAME: sim-exchange-backend:$SHORT_SHA
+  _IMAGE_NAME: sim-exchange-backend
   _BUCKET_ID_SECRETS: sim-exchange-backend-secrets
   _INSTANCE_NAME1: musicfox:us-central1:musicfox-db-3
   _SQL_PROXY_PATH: cloudsql
@@ -110,9 +110,9 @@ substitutions:
   _VAR4: REDIS_HOST
   _VAR5: REDIS_PASSWORD
   _VAR6: REDIS_PORT
-  _APP_DIR: backend/application/ # path from repo 
-
+  _APP_DIR: application/ # path from cloudbuild.yaml directory
+    
 # The images we'll push here
 images: [
-  'gcr.io/$PROJECT_ID/${_IMAGE_NAME}'
+  'gcr.io/$PROJECT_ID/${_IMAGE_NAME}-$TAG_NAME-$SHORT_SHA'
 ]
