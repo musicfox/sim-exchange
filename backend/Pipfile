@@ -47,6 +47,7 @@ flask-migrate = "*"
 dataclasses-json = "*"
 pandas = "*"
 matplotlib = "*"
+scipy = "*"
 
 [requires]
 python_version = "3.8"
