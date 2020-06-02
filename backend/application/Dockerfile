@@ -4,7 +4,7 @@ FROM python:3.7-slim
 
 # Add build arguments
 # Copy local code to the container image.
-ENV APP_HOME /application
+ENV APP_HOME /
 
 WORKDIR $APP_HOME
 
