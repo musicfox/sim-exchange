@@ -1,7 +1,7 @@
-# cloudbuild-active-dev.yaml
+# cloudbuild.yaml
 # 
-# This is the Musicfox Artist Beta Platform active development deployment
-# which represents the latest pushed + built feature/* branch
+# The Google Cloud Build yaml specification file for `sim-exchange`.
+# 
 
 steps:
 # pull the berglas container and write the secrets to temporary files 
@@ -28,7 +28,7 @@ steps:
       https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 && \
       sleep 2 && \
       chmod +x /workspace/cloud_sql_proxy"
-    waitFor: ['-']
+    waitFor: ['Install Berglas']
 
 # using the secrets from above, build and run the test suite
   - name: 'python:3.7-slim'
@@ -63,7 +63,7 @@ steps:
     id: 'Build Application Image'
     args: ['build',
            '-t',
-           'gcr.io/$PROJECT_ID/${_IMAGE_NAME}',
+           'gcr.io/$PROJECT_ID/${_IMAGE_NAME}-$SHORT_SHA',
            '.',
           ]
     dir: '${_APP_DIR}'
@@ -72,7 +72,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     id: 'Push Application Image'
     args: ['push',
-           'gcr.io/$PROJECT_ID/${_IMAGE_NAME}',
+           'gcr.io/$PROJECT_ID/${_IMAGE_NAME}-$SHORT_SHA',
           ]
 
 # Deploy the application image to Cloud Run
@@ -84,7 +84,7 @@ steps:
            'deploy', 
            '${_IMAGE_NAME}',
            '--image',
-           'gcr.io/$PROJECT_ID/${_IMAGE_NAME}',
+           'gcr.io/$PROJECT_ID/${_IMAGE_NAME}-$SHORT_SHA',
            '--region',
            'us-central1',
            '--platform', 
@@ -95,26 +95,24 @@ steps:
            '--set-env-vars',
            'SQL_PROXY_PATH=/${_SQL_PROXY_PATH},MFDB_NAME=${_MFDB_NAME},MFDB_USER=${_MFDB_USER},INSTANCE_NAME1=${_INSTANCE_NAME1},${_VAR2}=berglas://${_BUCKET_ID_SECRETS}/${_VAR2},${_VAR3}=berglas://${_BUCKET_ID_SECRETS}/${_VAR3},${_VAR4}=berglas://${_BUCKET_ID_SECRETS}/${_VAR4},${_VAR5}=berglas://${_BUCKET_ID_SECRETS}/${_VAR5},${_VAR6}=berglas://${_BUCKET_ID_SECRETS}/${_VAR6}',
            '--allow-unauthenticated',
-           '--memory',
-           '512Mi'
           ]
 
 # Use the defaults below which can be changed at the command line
 substitutions:
-  _IMAGE_NAME: sim-exchange-backend-active-dev
+  _IMAGE_NAME: sim-exchange-backend
   _BUCKET_ID_SECRETS: sim-exchange-backend-secrets
-  _INSTANCE_NAME1: musicfox:us-central1:musicfox-db-1
+  _INSTANCE_NAME1: musicfox:us-central1:musicfox-db-3
   _SQL_PROXY_PATH: cloudsql
   _MFDB_NAME: postgres
-  _MFDB_USER: postres
+  _MFDB_USER: postgres
   _VAR2: APP_SECRET
   _VAR3: MFDB_PASSWORD 
   _VAR4: REDIS_HOST
   _VAR5: REDIS_PASSWORD
   _VAR6: REDIS_PORT
-  _APP_DIR: application/
-
+  _APP_DIR: backend/application/ # path from cloudbuild.yaml directory
+    
 # The images we'll push here
 images: [
-  'gcr.io/$PROJECT_ID/${_IMAGE_NAME}'
+  'gcr.io/$PROJECT_ID/${_IMAGE_NAME}-$SHORT_SHA'
 ]

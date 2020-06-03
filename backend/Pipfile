@@ -5,7 +5,7 @@ verify_ssl = true
 
 [dev-packages]
 ipython = "*"
- 
+
 [packages]
 requests = "*"
 pytest = "*"
@@ -47,6 +47,10 @@ flask-migrate = "*"
 dataclasses-json = "*"
 pandas = "*"
 matplotlib = "*"
+scipy = "*"
 
 [requires]
 python_version = "3.8"
+
+[pipenv]
+allow_prereleases = false
