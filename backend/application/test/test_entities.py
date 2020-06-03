@@ -59,8 +59,9 @@ def test_user_generation(assetUsers, investorUsers):
     assert len(assetUsers)
     assert len(investorUsers)
 
+
 def test_arrival_path(arrivalPath, startValArrivalPath):
     assert isinstance(arrivalPath, pd.DataFrame)
     assert len(arrivalPath)
-    assert arrivalPath['arrivals'][0] == startValArrivalPath
-    assert arrivalPath[['arrivals']].plot() is not None
+    assert arrivalPath["arrivals"][0] == startValArrivalPath
+    assert arrivalPath[["arrivals"]].plot() is not None
